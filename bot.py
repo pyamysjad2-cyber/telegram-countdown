@@ -1,30 +1,28 @@
-import os
-import asyncio
-from datetime import datetime, date
-from zoneinfo import ZoneInfo
-from telegram import Bot
+name: Daily Telegram Bot
 
-TOKEN = os.environ["BOT_TOKEN"]
-CHAT_ID = os.environ["CHAT_ID"]
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 20 * * *'
 
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
 
-TARGET_DATE = date(2026, 8, 21)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
 
-MESSAGE = """🔥 موفقیت اتفاقی نیست؛ نتیجه‌ی تلاش‌های کوچکی است که هر روز تکرار می‌کنی.
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
 
-🎯 روزشمار کنکور
+      - name: Install dependencies
+        run: pip install python-telegram-bot
 
-⏳ {days} روز تا ۳۰ مرداد"""
-
-async def send_message():
-    bot = Bot(TOKEN)
-
-    today = datetime.now(ZoneInfo("Asia/Tehran")).date()
-    days = max((TARGET_DATE - today).days, 0)
-
-    await bot.send_message(
-        chat_id=CHAT_ID,
-        text=MESSAGE.format(days=days)
-    )
-
-asyncio.run(send_message())
+      - name: Run bot
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: python bot.py
