@@ -4,8 +4,9 @@ from datetime import datetime, date
 from zoneinfo import ZoneInfo
 from telegram import Bot
 
-TOKEN = os.environ["8842311265:AAF-T509aLZBNpLad2uGMZ6gZD8oOD4TuHA"]
-CHAT_ID = os.environ["1004448100571"]
+TOKEN = os.environ["BOT_TOKEN"]
+CHAT_ID = os.environ["CHAT_ID"]
+
 
 TARGET_DATE = date(2026, 8, 21)
 
